@@ -75,7 +75,7 @@
     language=C++,
     aboveskip=3mm,
     belowskip=3mm,
-    stepnumber=1,
+    stepnumber=1, % set to 0 if you don't like line nums
     showstringspaces=false,
     columns=flexible,
     basicstyle={\small\ttfamily},
@@ -137,6 +137,10 @@
 \usepackage{graphicx} % graphics
 \usepackage{enumitem} % listing style (bullet lists)
 
+% below helps with trying to get figures in a row
+% \usepackage{caption}
+% \usepackage{subcaption}
+
 % hyperlink styling
 % use \href{} and \url{}, and colors table of contents links
 % use \href{} and \url{}
@@ -184,6 +188,10 @@
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     \section{Hello World}
+    \label{sec:hello} % section label
+                      % to link sections within file, 
+                      % do \hyperref[label]{text}
+        Link to \hyperref[sec:figures]{Figures section}
 
         \subsection{Fonts and Styles:}
             \begin{itemize}
@@ -211,11 +219,60 @@
             \end{center}
 
         \subsection{Figure}
+        \label{sec:figures}
+            Basic single figure (commented out):
             % \begin{figure}[h]
             %     \centering
             %     \includegraphics[width=0.7\linewidth]{FILE_PATH}
             %     % \caption{}
             %     \label{fig:FILE_NAME}
             % \end{figure}
+
+            Code environment:
+\begin{lstlisting}[stepnumber=0]
+int main() {
+    cout << "Hello World" << endl;
+}
+\end{lstlisting}
+
+            One way to put code side-by-side:
+
+\begin{tabular}{l|l}
+\hline
+\begin{minipage}[h]{0.5\textwidth}
+    \begin{lstlisting}[stepnumber=0]
+    <animal.h>= // C++
+    class Animal {
+    ...
+    };
+    \end{lstlisting}
+\end{minipage}
+&                  % remember  '&' between cells in a row
+\begin{minipage}[h]{0.5\textwidth}
+    \begin{lstlisting}[stepnumber=0]
+    <animal.cpp>= // C++
+    ...
+    \end{lstlisting}
+\end{minipage} \\ % remember '\\' at the end of each row
+\hline
+\end{tabular}
+
+                One way to align multiple (2) figures in a row:
+                % \begin{figure}[h]
+                %     \centering
+                %     \begin{tabular}{cc}
+                %         \begin{subfigure}{.5\textwidth}
+                %             \centering
+                %             \includegraphics[width=1\textwidth]{FILE_PATH1}
+                %             \label{fig:FILE_NAME1}
+                %         \end{subfigure} &
+                %         \begin{subfigure}{.5\textwidth}
+                %             \centering
+                %             \includegraphics[width=1\textwidth]{FILE_PATH2}
+                %             \label{fig:FILE_NAME2}
+                %         \end{subfigure}
+                %     \end{tabular}
+                %     \label{fig:MULTI_NAME}
+                % \end{figure}
 
 \end{document}
