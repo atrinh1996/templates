@@ -1,0 +1,283 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc} %% I added for characters
+
+%%%%%% Given %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{alltt}
+\usepackage{verbatim}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{qtree}
+\usepackage{semantic}
+\usepackage{mathpartir}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{enumitem} % listing style (bullet lists)
+\usepackage{amssymb, latexsym} % label=\alph* for enumerate
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% GIVEN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\br}[1]{\langle #1 \rangle}
+\newcommand{\state}[4]{\langle {#1,#2,#3,#4} \rangle}
+\newcommand{\evalr}[2][{}]{\state{#2}{\xi#1}{\phi}{\rho#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newlength{\toppush}
+\setlength{\toppush}{2\headheight}
+\addtolength{\toppush}{\headsep}
+
+% Page head Styling
+% Name and subject of the class
+\def\subjnum{Comp 105}          % Class Number
+\def\subjname{Programming Languages}       % Class Name
+
+% Name of the student, university name and which semester
+\def\doheading#1#2#3{\vfill\eject\vspace*{-\toppush}%
+  \vbox{\hbox to\textwidth{{\bf} \subjnum: \subjname \hfil Amy Bui}%
+    \hbox to\textwidth{{\bf} Homework 2 \hfil#3\strut}%
+    \hrule}}
+
+%Command for the title of the document (Homework 0)
+\newcommand{\htitle}[1]{\vspace*{1.25ex plus 1ex minus 0ex}%
+\begin{center}
+    {\large\bf #1}
+\end{center}} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% use \lstinline! xxx ! or \begin{lstlisting} ... \end{lstlisting}
+\usepackage{listings}
+
+\usepackage{color}
+\definecolor{light-gray}{gray}{0.97} % shade of grey
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+% \begin{lstlisting}[...] ... \end{lstlisting}
+\lstset{frame=none,
+    language=C++,
+    aboveskip=3mm,
+    belowskip=3mm,
+    stepnumber=1, % set to 0 if you don't like line nums
+    showstringspaces=false,
+    columns=flexible,
+    basicstyle={\small\ttfamily},
+    numbers=left,
+    numberstyle=\color{black},
+    keywordstyle=\color{blue},
+    commentstyle=\color{dkgreen},
+    stringstyle=\color{mauve},
+    backgroundcolor=\color{light-gray},
+    breaklines=true,
+    breakatwhitespace=false,
+    tabsize=2
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}
+%% https://tex.stackexchange.com/questions/401750/quick-and-short-command-for-coloring-one-word
+\newcommand\shorthandon{\catcode`@=\active \catcode`^=\active \catcode`*=\active }
+\newcommand\shorthandoff{\catcode`@=12 \catcode`^=7 \catcode`*=12 }
+\shorthandon
+\def@#1@{\textcolor{red}{#1}}%
+\def^#1^{\textcolor{blue}{#1}}%
+\def*#1{\string#1}
+\shorthandoff
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\doheading{2}{title}{abui02}
+
+
+%%%%% Given %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \parskip=0.8\baselineskip plus 2pt
+% \parindent=0pt
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% Rules %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Inference Rules}
+% Here are some examples of LaTeX commands that could help you on the opsem
+% assignment.
+
+Verbatim code: \verb|(if x 2 3)|
+
+Another way to put text in code font: \texttt{x}.
+
+Putting text in the font to name rules: \textsc{IfFalse}.
+
+% Here is an example of two rules appearing one over the other:
+
+\begin{mathpar}
+\inferrule*[Right=\textsc{Literal}]
+          {\ }
+          {\evalr{\textsc{literal}(v)}
+               \Downarrow
+           \state{v}{\xi}{\phi}{\rho}}
+\end{mathpar}
+\begin{mathpar}
+\inferrule*[Right=\textsc{FormalVar}]
+          {x \in dom \rho}
+           {\evalr{\textsc{var}(x)}
+                \Downarrow
+            \state{\rho(x)}{\xi}{\phi}{\rho}}
+\end{mathpar}
+
+% And here is an example of a derivation (where I've shortened the abstract syntax
+\textsc{literal} to \textsc{lit}):
+
+\begin{mathpar}
+\inferrule*[Left=\textsc{FormalAssign}]
+  {\texttt{n} \in dom \rho
+   \and
+   \inferrule*[Right=\textsc{Literal}]
+     {\ }
+     {\evalr{\textsc{lit}(\texttt{0})} \Downarrow \evalr{0}} 
+  }
+  {\evalr{\textsc{set}(\textsc{var}(\texttt{n}), 
+                      \textsc{lit}(\texttt{0}))}
+   \Downarrow 
+   \state{0}{\xi}{\phi}{\rho\{\texttt{n} \mapsto 0\}}
+  }
+\end{mathpar}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% WhileEnd Rule
+\begin{mathpar}
+    \inferrule*[Right=\textsc{(WhileEnd)}]
+    {
+      \evalr{e_1}
+        \Downarrow
+      \state{v_1}{\xi'}{\phi}{\rho'}
+      \quad v_1 = 0
+    }
+    {
+      \evalr{\textsc{while}(e_1, e_2)}{}
+        \Downarrow
+      \state{0}{\xi'}{\phi}{\rho'}
+    }
+\end{mathpar}
+
+
+
+
+% %%% FormalVar rule
+\begin{mathpar}
+  \inferrule*[Right=\textsc{(FormalVar)}]
+  {
+    x \in \textsf{dom}\ \rho
+  }
+  {
+    \evalr{\textsc{var}(x)} \Downarrow \state{\rho(x)}{\xi}{\phi}{\rho}
+  }
+\end{mathpar}
+
+% %%% FormalAssign Rule
+\begin{mathpar}
+    \inferrule*[Right=\textsc{(FormalAssign)}]
+    {
+      x \in \textsf{dom}\ \rho
+        \qquad
+      \evalr{e} \Downarrow \state{v}{\xi'}{\phi}{\rho'}
+    }
+    {
+      \evalr{\textsc{set}(x, e)} \Downarrow \state{v}{\xi'}{\phi}{\rho'\{x \mapsto v\}}
+    }
+\end{mathpar}
+
+
+%%% GlobalVar rule
+\begin{mathpar}
+    \inferrule*[Right=(\textsc{GlobalVar})]
+    {
+      x \notin \textsf{dom}\ \rho
+      \qquad
+      x \in \textsf{dom}\ \xi
+    }
+    {
+      \evalr{\textsc{var}(x)}
+      \Downarrow
+      \state{\xi(x)}{\xi}{\phi}{\rho}
+    }
+\end{mathpar}
+
+%%% GlobalAssign rule
+\begin{mathpar}
+  \inferrule*[Right=(\textsc{GlobalAssign})]
+  {
+    x \notin \textsf{dom}\ \rho
+      \qquad
+    x \in \textsf{dom}\ \xi
+      \qquad
+    \evalr{e} \Downarrow \state{v}{\xi'}{\phi}{\rho'}
+  }
+  {
+    \evalr{\textsc{set}(x, e)}
+    \Downarrow
+    \state{v}{\xi'\{x \mapsto v\}}{\phi}{\rho'}
+  }
+\end{mathpar}
+
+
+%%% If True rule
+\begin{mathpar}
+    \inferrule*[Right=(\textsc{IfTrue})]
+    {
+        \evalr{e_1} \Downarrow \state{v_1}{\xi'}{\phi}{\rho'}
+        \and
+        v_1 \neq 0
+        \and
+        \state{e_2}{\xi'}{\phi}{\rho'} \Downarrow \state{v_2}{\xi''}{\phi}{\rho''}
+    }
+    {
+        \evalr{\textsc{if}(e_1, e_2, e_3)} \Downarrow \state{v_2}{\xi''}{\phi}{\rho''}
+    }
+\end{mathpar}
+
+
+%%% If False rule
+\begin{mathpar}
+  \inferrule*[Right=(\textsc{IfFalse})]
+  {
+      \evalr{e_1} \Downarrow \state{v_1}{\xi'}{\phi}{\rho'}
+      \and
+      v_1 = 0
+      \and
+      \state{e_3}{\xi'}{\phi}{\rho'} \Downarrow \state{v_3}{\xi''}{\phi}{\rho''}
+  }
+  {
+      \evalr{\textsc{if}(e_1, e_2, e_3)} \Downarrow \state{v_3}{\xi''}{\phi}{\rho''}
+  }
+\end{mathpar}
+% \pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Part A: Talking Operational Semantics (20\%)}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% End of Section A %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Part B: Operational Semantics and Language Design (35\%)}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% End of Section B %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Part C: Derivatives, Proofs, and Metatheory (45\%)}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% End of Section C %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\end{document}
