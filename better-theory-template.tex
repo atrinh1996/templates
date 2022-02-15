@@ -16,6 +16,28 @@
 \usepackage{amssymb, latexsym} % label=\alph* for enumerate
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%% GIVEN for Calculational Proof %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{array}
+\usepackage{graphicx}
+% \usepackage{amsmath}
+\usepackage{times}
+\renewcommand\ttdefault{aett}
+
+\newcommand\pterm[1]{\multicolumn{2}{l}{#1}\\}
+\newcommand\pfeqonly[1]{%
+   \mskip 15mu{}={} & \{\mbox{#1}\} \\
+}
+\newcommand\pfeq[2][]{\pfeqonly{#1}\pterm{#2}}
+\newcommand\ptermmbox[1]{\multicolumn{2}{l}{\mbox{#1}}\\}
+\newenvironment{codeproof}{\[\advance\extrarowheight by 2pt 
+                             \let\pterm=\ptermmbox\begin{array}{c@{}l}}
+                     {\end{array}\]\ifhmode\unskip\par\fi\csname @endparenv\endcsname}
+
+\let\Tt=\ttfamily
+\let\nwendquote=\relax
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 %%% GIVEN %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\br}[1]{\langle #1 \rangle}
 \newcommand{\state}[4]{\langle {#1,#2,#3,#4} \rangle}
@@ -98,6 +120,29 @@
 % \parindent=0pt
 
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Calculational proof}
+    Here are some examples of \LaTeX commands that could help you write a
+    calculational proof.
+
+    Writing a code chunk on a line: \texttt{(length (append xs ys))}.
+
+    And here's a chunk of a calculational proof:
+    \begin{codeproof}
+    \pterm{{\Tt{}(length (append xs ys))\nwendquote}}
+    \pfeqonly{ by assumption, $\mathtt{xs} = \mbox{\texttt{(cons z zs)}}$ }
+    \pterm{\Tt{}(length (append (cons z zs) ys))}
+    \pfeqonly{ append-cons law }
+    \pterm{\Tt{}(length (cons z (append zs ys))}
+    \end{codeproof}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% End of Section A %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%% Rules %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section*{Inference Rules}
@@ -121,7 +166,7 @@ Putting text in the font to name rules: \textsc{IfFalse}.
 \end{mathpar}
 \begin{mathpar}
 \inferrule*[Right=\textsc{FormalVar}]
-          {x \in dom \rho}
+          {x \in \texttt{dom}\ \rho}
            {\evalr{\textsc{var}(x)}
                 \Downarrow
             \state{\rho(x)}{\xi}{\phi}{\rho}}
@@ -132,7 +177,7 @@ Putting text in the font to name rules: \textsc{IfFalse}.
 
 \begin{mathpar}
 \inferrule*[Left=\textsc{FormalAssign}]
-  {\texttt{n} \in dom \rho
+  {\texttt{n} \in \texttt{dom}\ \rho
    \and
    \inferrule*[Right=\textsc{Literal}]
      {\ }
@@ -169,7 +214,7 @@ Putting text in the font to name rules: \textsc{IfFalse}.
 \begin{mathpar}
   \inferrule*[Right=\textsc{(FormalVar)}]
   {
-    x \in \textsf{dom}\ \rho
+    x \in \texttt{dom}\ \rho
   }
   {
     \evalr{\textsc{var}(x)} \Downarrow \state{\rho(x)}{\xi}{\phi}{\rho}
@@ -180,7 +225,7 @@ Putting text in the font to name rules: \textsc{IfFalse}.
 \begin{mathpar}
     \inferrule*[Right=\textsc{(FormalAssign)}]
     {
-      x \in \textsf{dom}\ \rho
+      x \in \texttt{dom}\ \rho
         \qquad
       \evalr{e} \Downarrow \state{v}{\xi'}{\phi}{\rho'}
     }
@@ -254,6 +299,10 @@ Putting text in the font to name rules: \textsc{IfFalse}.
   }
 \end{mathpar}
 % \pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%% End of Inference Rules%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Part A: Talking Operational Semantics (20\%)}
