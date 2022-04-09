@@ -12,6 +12,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{parskip}
 \usepackage{tabularx}
+\usepackage[color, leftbars]{changebar}
 
 % Important Configurations
 
@@ -94,6 +95,22 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}
+%% https://tex.stackexchange.com/questions/401750/quick-and-short-command-for-coloring-one-word
+\newcommand\shorthandon{\catcode`@=\active \catcode`^=\active \catcode`*=\active }
+\newcommand\shorthandoff{\catcode`@=12 \catcode`^=7 \catcode`*=12 }
+\shorthandon
+\def@#1@{\textcolor{red}{#1}}%
+\def^#1^{\textcolor{blue}{#1}}%
+\def*#1{\string#1}
+\shorthandoff
+%% useage: \textcolor{red}{text here}
+% \shorthandon
+% This is a @test@ of the ^emergency^ bro*@dcast system.
+% \shorthandoff
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -152,6 +169,7 @@
     linkcolor=blue, % was previously black
     filecolor=magenta,
     urlcolor=blue,
+    pdftitle={Template}
 }
 \urlstyle{same}
 
@@ -177,7 +195,12 @@
 % \title{COMP160 - Algorithms: Class Notes and Practice}
 
 \begin{document}
+%% create title page
+% \title{(g)ROOT \\ Language Reference Manual}
+% \author{Samuel Russo \quad Amy Bui \quad Eliza Encherman \\ Zachary Goldstein \quad Nickolas Gravel}
+% \date{\today}
 % \maketitle
+
 \doheading{2}{title}{Homework 0}
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -192,6 +215,17 @@
                       % to link sections within file, 
                       % do \hyperref[label]{text}
         Link to \hyperref[sec:figures]{Figures section}
+
+\cbcolor{dkgreen}
+\cbstart
+\begin{lstlisting}
+(; This is a comment. ;)
+
+(; This is a 
+   multi-lined comment. ;)
+\end{lstlisting}
+\cbend
+
 
         \subsection{Fonts and Styles:}
             \begin{itemize}
